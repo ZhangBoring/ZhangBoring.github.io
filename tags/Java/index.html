@@ -29,6 +29,8 @@
     <section class='menu'>
         <div>Boring&#39;s Blog</div>
         
+            <div>Life is boring, so go to study.</div>
+        
         <ul>
           
             <a href="/" class="Btn">
@@ -37,10 +39,6 @@
           
             <a href="/tags/" class="Btn">
               <li>Tags</li>
-            </a>  
-          
-            <a href="/categories/" class="Btn">
-              <li>Categories</li>
             </a>  
           
             <a href="/archives/" class="Btn">
@@ -59,9 +57,56 @@
             <ul class="Index">
   
     <header class='PageTitle'>
-        <h1>{ 学习 }</h1>
+        <h1>{ Java }</h1>
     </header>
   
+  
+    <li>
+      <article class='ListView'>
+    <header class="title">
+      
+        <h1>
+          <a href="/2020/07/18/Java%E9%9B%86%E5%90%88-List/">Java集合-List</a>
+        </h1>
+      
+      <div class='ListMeta'>
+  <time datetime="2020-07-18T05:56:31.000Z" itemprop="datePublished">
+    2020-07-18
+  </time>
+  
+  | 
+  <ul>
+    
+  <li class="meta-text">
+  { <a href="/tags/Java/">Java</a> }
+  </li>
+
+
+  </ul>
+  
+  
+</div>
+
+    </header>
+    <div>
+      
+        <h2 id="1-ArrayList"><a href="#1-ArrayList" class="headerlink" title="1. ArrayList"></a>1. ArrayList</h2><p><code>ArrayList</code>特点：</p>
+<ul>
+<li><code>ArrayList</code>底层维护一个Object数组(elementData)，新增、查询快，删除、插入慢(慢在会有一次元素复制，快在寻址)，适合顺序添加、随机访问场景；</li>
+<li>允许插入null元素，数据允许重复、线程不安全；</li>
+<li>初始化时默认容量为10；</li>
+</ul>
+<h3 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h3><p>在elementData末尾添加元素。扩容操作：容量变为1.5倍，调用<code>Arrays.copyOf(elementData, newCapacity)</code>将元素复制到新数组里。</p>
+        
+          <div class="more-link">
+            <a href="/2020/07/18/Java%E9%9B%86%E5%90%88-List/#more">Read On »</a>
+          </div>
+        
+      
+    </div>
+</article>
+
+    </li>
   
     <li>
       <article class='ListView'>
@@ -83,19 +128,13 @@
   { <a href="/tags/JVM/">JVM</a> }
   </li>
 
-
-  </ul>
-  
-  
-  / 
-  <ul>
-    
   <li class="meta-text">
-  { <a href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a> }
+  { <a href="/tags/Java/">Java</a> }
   </li>
 
 
   </ul>
+  
   
 </div>
 
@@ -120,6 +159,7 @@
     </li>
   
 </ul>
+
 
 
             <footer>
