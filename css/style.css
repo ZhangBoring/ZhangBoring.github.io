@@ -470,9 +470,6 @@ code pre {
   font-size: 13px;
   line-height: 1.6em;
 }
-figure > table > tbody > tr > td.code {
-  border: none;
-}
 img {
   max-width: 100%;
 }
@@ -640,6 +637,58 @@ blockquote {
 .route-trans-leave.route-trans-leave-active {
   animation: route-trans-o 0.8s;
   animation-fill-mode: forwards;
+}
+figure > table > tbody > tr > td.code {
+  border: none;
+}
+.gutter {
+  width: 5%;
+}
+.gutter pre {
+  text-align: right;
+  margin-right: 10px;
+}
+.ContentView > section > table,
+.ListView > div > table {
+  line-height: line-height;
+  margin: line-height 0;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.ContentView > section > table tr:nth-child(2n),
+.ListView > div > table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+.ContentView > section > table tr,
+.ListView > div > table tr {
+  border-top: 1px solid #ccc;
+  margin: 0;
+  padding: 0;
+}
+.ContentView > section > table tr th:first-child,
+.ListView > div > table tr th:first-child {
+  margin-top: 0;
+}
+.ContentView > section > table tr th,
+.ListView > div > table tr th {
+  font-weight: bold;
+  border: 1px solid #ccc;
+  border-bottom: 0;
+  text-align: left;
+  margin: 0;
+  padding: 6px 13px;
+}
+.ContentView > section > table tr td:first-child,
+.ListView > div > table tr td:first-child {
+  margin-top: 0;
+}
+.ContentView > section > table tr td,
+.ListView > div > table tr td {
+  border: 1px solid #ccc;
+  text-align: left;
+  margin: 0;
+  padding: 6px 13px;
 }
 @-moz-keyframes route-trans-e {
   0% {

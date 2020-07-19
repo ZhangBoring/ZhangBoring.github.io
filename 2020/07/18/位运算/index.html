@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>位运算 | Boring&#39;s Blog</title>
+  
+    <link rel="icon" href="/images/icon.png">
+  
+  
+  
+  <link href="https://https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" rel="stylesheet">
+  <!--link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css"-->
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
+
+<body>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="Shell">
+    <aside class='SideBar'>
+    <section class='avatar' style="background-image: url()">
+        <div class='av-pic' style="background-image: url(/images/icon.png)">
+        </div>
+    </section>
+    <section class='menu'>
+        <div>Boring&#39;s Blog</div>
+        
+            <div>Life is boring, so go to study.</div>
+        
+        <ul>
+          
+            <a href="/" class="Btn">
+              <li>Home</li>
+            </a>  
+          
+            <a href="/tags/" class="Btn">
+              <li>Tags</li>
+            </a>  
+          
+            <a href="/archives/" class="Btn">
+              <li>Archive</li>
+            </a>  
+          
+        </ul>
+    </section>
+    <section class="media">
+        
+    </section>
+</aside>
+
+    <div class="container">
+        <div data-pager-shell>
+            <div>
+  <article class='ContentView'>
+    <header class='PageTitle'>
+        <h1>位运算</h1>
+    </header>
+
+    <section>
+      <p>Java定义的位运算符操作数类型时可以自动拆箱为原始整数类型的数据，运算时先将操作数转换位二进制。这些类型包括：<code>long</code>、<code>int</code>、<code>short</code>、<code>char</code>和<code>byte</code>。</p>
+<h2 id="位逻辑运算符~"><a class="markdownIt-Anchor" href="#位逻辑运算符~"></a> 位逻辑运算符(&amp;,^,|,~)</h2>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>含义</th>
+<th>示例</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&amp;</td>
+<td>操作数的按位与运算(AND)</td>
+<td>0xff00 &amp; 0xf0f0</td>
+<td>0xf000</td>
+</tr>
+<tr>
+<td>^</td>
+<td>操作数的按位异或(XOR)</td>
+<td>0xff00 ^ 0xf0f0</td>
+<td>0xff00</td>
+</tr>
+<tr>
+<td>|</td>
+<td>操作数的按位或(OR)</td>
+<td>0xff00 | 0xf0f0</td>
+<td>0xfff0</td>
+</tr>
+<tr>
+<td>~</td>
+<td>操作数的按位取反(NOT)，~x=(-x)-1</td>
+<td>~5</td>
+<td>-6</td>
+</tr>
+</tbody>
+</table>
+<a id="more"></a>
+<h4 id="位与运算"><a class="markdownIt-Anchor" href="#位与运算"></a> 位与运算</h4>
+<p>对应的二进制位同时为1，计算结果才为1，否则为0。任何数与0按位与运算，结果为0。</p>
+<center><img src="/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/&.png" class="" title="23&amp;84&#x3D;20"></center>
+<p>####　位或运算</p>
+<p>对应的二进制位只要有一个为1，那么结果就为1；对应的二进制位都为0，结果才为0。</p>
+<center><img src="/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%7C.png" class="" title="23|84&#x3D;87"></center>
+<h4 id="位异或运算"><a class="markdownIt-Anchor" href="#位异或运算"></a> 位异或运算</h4>
+<p>如果对应的二进制位相同（同时为0或同时为1）时，结果为0；如果对应的二进制位不相同，结果则为1。</p>
+<center><img src="/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%5E.png" class="" title="23^84&#x3D;67"></center>
+<h4 id="位取反运算"><a class="markdownIt-Anchor" href="#位取反运算"></a> 位取反运算</h4>
+<p>只对一个操作数进行运算，将操作数二进制中的1改为0，0改为1。Java语言规范中原文：~x=(-x)-1，</p>
+<blockquote>
+<p>At run time, the value of the unary bitwise complement expression is the bitwise complement of the promoted value of the operand. In all cases, ~x equals (-x)-1.</p>
+</blockquote>
+<h2 id="位移运算符"><a class="markdownIt-Anchor" href="#位移运算符"></a> 位移运算符</h2>
+<table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>含义</th>
+<th>示例</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt;&gt;</td>
+<td>右移位运算符；(n &gt;&gt; s) =&gt; floor(n/2<sup>s</sup>);n&gt;=0的话,结果是n/2<sup>s</sup></td>
+<td>8 &gt;&gt; 1</td>
+<td>4</td>
+</tr>
+<tr>
+<td>&lt;&lt;</td>
+<td>左移位运算符；(n &lt;&lt; s) =&gt; n乘以2的s次方(有可能发生溢出)</td>
+<td>9 &lt;&lt; 2</td>
+<td>36</td>
+</tr>
+<tr>
+<td>&gt;&gt;&gt;</td>
+<td>无符号右移位运算符;如果n为正,等价与n &gt;&gt; s;<br/>如果n为负且为int,结果等于(n &gt;&gt; s) + (2 &lt;&lt; ~s);<br/>如果n为负且为long,结果等于(n &gt;&gt; s) + (2L &lt;&lt; ~s);</td>
+<td>15 &gt;&gt;&gt; 2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>&lt;&lt;&lt;</td>
+<td>无符号左移位运算符</td>
+<td>-6 &gt;&gt;&gt; 3</td>
+<td>536870911</td>
+</tr>
+</tbody>
+</table>
+<h4 id="左移位运算"><a class="markdownIt-Anchor" href="#左移位运算"></a> 左移位运算</h4>
+<p><code>&lt;&lt;</code>:按二进制形式把所有的数字向左移动对应的位数，高位移出（舍弃），低位的空位补零。</p>
+<center><img src="/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%3C%3C.png" class="" title="9&lt;&lt;2"></center>
+<h4 id="右移位运算"><a class="markdownIt-Anchor" href="#右移位运算"></a> 右移位运算</h4>
+<p><code>&gt;&gt;</code>:按二进制形式把所有的数字向右移动对应的位数，低位移出（舍弃），高位的空位补零。</p>
+<center><img src="/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%3E%3E.png" class="" title="8&gt;&gt;1"></center>
+
+      
+
+    </section>
+    
+      <section class='ArticleMeta'>
+          <div>
+            发布于&nbsp;
+            <time datetime="2020-07-18T15:31:41.000Z" itemprop="datePublished">
+              2020-07-18
+            </time>
+          </div>
+          
+            <div>
+              tags: 
+  <li class="meta-text">
+  { <a href="/tags/%E5%9F%BA%E7%A1%80/">基础</a> }
+  </li>
+
+
+            </div>
+          
+      </section>
+    
+    
+</article>
+
+  
+</div>
+
+            <footer>
+    <div>© 2020 - Zhang BaoYun </div>
+    <div>
+        <span>
+            Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
+        </span>
+        ,
+        <span>
+            Theme - <a href="https://github.com/nameoverflow/hexo-theme-icalm" target="_blank" rel="noopener">Icalm</a>
+        </span>
+    </div>
+</footer>
+
+        </div>
+    </div>
+</div>
+
+<script src="/js/pager/dist/singlepager.js"></script>
+
+<script>
+var sp = new Pager('data-pager-shell')
+
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+</body>
+</html>

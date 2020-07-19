@@ -57,6 +57,10 @@
         <div data-pager-shell>
             <ul class="Index">
   
+    <header class='PageTitle'>
+        <h1>{ 基础 }</h1>
+    </header>
+  
   
     <li>
       <article class='ListView'>
@@ -136,141 +140,8 @@
 
     </li>
   
-    <li>
-      <article class='ListView'>
-    <header class="title">
-      
-        <h1>
-          <a href="/2020/07/18/Java%E9%9B%86%E5%90%88-List/">Java集合-List</a>
-        </h1>
-      
-      <div class='ListMeta'>
-  <time datetime="2020-07-18T05:56:31.000Z" itemprop="datePublished">
-    2020-07-18
-  </time>
-  
-  | 
-  <ul>
-    
-  <li class="meta-text">
-  { <a href="/tags/Java/">Java</a> }
-  </li>
-
-
-  </ul>
-  
-  
-</div>
-
-    </header>
-    <div>
-      
-        <h2 id="1-arraylist"><a class="markdownIt-Anchor" href="#1-arraylist"></a> 1. ArrayList</h2>
-<p><code>ArrayList</code>特点：</p>
-<ul>
-<li><code>ArrayList</code>底层维护一个Object数组(elementData)，新增、查询快，删除、插入慢(慢在会有一次元素复制，快在寻址)，适合顺序添加、随机访问场景；</li>
-<li>允许插入null元素，数据允许重复、线程不安全；</li>
-<li>初始化时默认容量为10；</li>
 </ul>
-<h3 id="添加元素"><a class="markdownIt-Anchor" href="#添加元素"></a> 添加元素</h3>
-<p>在elementData末尾添加元素。扩容操作：容量变为1.5倍，调用<code>Arrays.copyOf(elementData, newCapacity)</code>将元素复制到新数组里。</p>
-        
-          <div class="more-link">
-            <a href="/2020/07/18/Java%E9%9B%86%E5%90%88-List/#more">Read On »</a>
-          </div>
-        
-      
-    </div>
-</article>
 
-    </li>
-  
-    <li>
-      <article class='ListView'>
-    <header class="title">
-      
-        <h1>
-          <a href="/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/">运行时数据区(Run-Time Data Areas)</a>
-        </h1>
-      
-      <div class='ListMeta'>
-  <time datetime="2020-07-16T08:45:11.000Z" itemprop="datePublished">
-    2020-07-16
-  </time>
-  
-  | 
-  <ul>
-    
-  <li class="meta-text">
-  { <a href="/tags/Java/">Java</a> }
-  </li>
-
-  <li class="meta-text">
-  { <a href="/tags/JVM/">JVM</a> }
-  </li>
-
-
-  </ul>
-  
-  
-</div>
-
-    </header>
-    <div>
-      
-        <center><img src="/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/JVM_Run-Time_Data_Areas.png" class="" title="JVM运行时数据区"></center>
-<!-- ![JVM运行时数据区](JVM_Run-Time_Data_Areas.png "JVM运行时数据区") -->
-<p>JVM定义了在程序运行期间使用的各种运行时数据区。其中一些区域随JVM启动而创建，JVM退出而销毁。其他区域是每个线程私有的。随线程创建而创建，线程退出而销毁。</p>
-<!-- > The Java Virtual Machine defines various run-time data areas that are used during execution of a program. Some of these data areas are created on Java Virtual Machine start-up and are destroyed only when the Java Virtual Machine exits. Other data areas are per thread. Per-thread data areas are created when a thread is created and destroyed when the thread exits. -->
-        
-          <div class="more-link">
-            <a href="/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/#more">Read On »</a>
-          </div>
-        
-      
-    </div>
-</article>
-
-    </li>
-  
-    <li>
-      <article class='ListView'>
-    <header class="title">
-      
-        <h1>
-          <a href="/2020/07/14/Hello%20World/">Hello World! Hexo</a>
-        </h1>
-      
-      <div class='ListMeta'>
-  <time datetime="2020-07-14T07:50:34.000Z" itemprop="datePublished">
-    2020-07-14
-  </time>
-  
-  | 
-  <ul>
-    
-  <li class="meta-text">
-  { <a href="/tags/hexo/">hexo</a> }
-  </li>
-
-
-  </ul>
-  
-  
-</div>
-
-    </header>
-    <div>
-      
-        <h1 id="hello-world-hexo"><a class="markdownIt-Anchor" href="#hello-world-hexo"></a> Hello World! Hexo</h1>
-
-      
-    </div>
-</article>
-
-    </li>
-  
-</ul>
 
 
             <footer>

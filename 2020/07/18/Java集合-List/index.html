@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
 <head>
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Java集合-List | Boring&#39;s Blog</title>
@@ -10,6 +10,7 @@
   
   
   
+  <link href="https://https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" rel="stylesheet">
   <!--link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css"-->
   
 <link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css">
@@ -17,10 +18,10 @@
   
 <link rel="stylesheet" href="/css/style.css">
 
-<meta name="generator" content="Hexo 4.2.1"></head>
+<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
 <body>
-<div class="Shell">
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="Shell">
     <aside class='SideBar'>
     <section class='avatar' style="background-image: url()">
         <div class='av-pic' style="background-image: url(/images/icon.png)">
@@ -61,33 +62,35 @@
     </header>
 
     <section>
-      <h2 id="1-ArrayList"><a href="#1-ArrayList" class="headerlink" title="1. ArrayList"></a>1. ArrayList</h2><p><code>ArrayList</code>特点：</p>
+      <h2 id="1-arraylist"><a class="markdownIt-Anchor" href="#1-arraylist"></a> 1. ArrayList</h2>
+<p><code>ArrayList</code>特点：</p>
 <ul>
 <li><code>ArrayList</code>底层维护一个Object数组(elementData)，新增、查询快，删除、插入慢(慢在会有一次元素复制，快在寻址)，适合顺序添加、随机访问场景；</li>
 <li>允许插入null元素，数据允许重复、线程不安全；</li>
 <li>初始化时默认容量为10；</li>
 </ul>
-<h3 id="添加元素"><a href="#添加元素" class="headerlink" title="添加元素"></a>添加元素</h3><p>在elementData末尾添加元素。扩容操作：容量变为1.5倍，调用<code>Arrays.copyOf(elementData, newCapacity)</code>将元素复制到新数组里。</p>
+<h3 id="添加元素"><a class="markdownIt-Anchor" href="#添加元素"></a> 添加元素</h3>
+<p>在elementData末尾添加元素。扩容操作：容量变为1.5倍，调用<code>Arrays.copyOf(elementData, newCapacity)</code>将元素复制到新数组里。</p>
 <a id="more"></a>
-
-<h3 id="删除元素"><a href="#删除元素" class="headerlink" title="删除元素"></a>删除元素</h3><p>使用<code>System.arraycopy</code>方法将指定位置后的所有元素，向前移动一位；并将末位元素置为null，供GC回收。</p>
+<h3 id="删除元素"><a class="markdownIt-Anchor" href="#删除元素"></a> 删除元素</h3>
+<p>使用<code>System.arraycopy</code>方法将指定位置后的所有元素，向前移动一位；并将末位元素置为null，供GC回收。</p>
 <center><img src="/2020/07/18/Java%E9%9B%86%E5%90%88-List/ArrayList-remove.png" class="" title="remove(4)"></center>
-
-<h3 id="插入元素"><a href="#插入元素" class="headerlink" title="插入元素"></a>插入元素</h3><p>先检查是否需要扩容。使用<code>System.arraycopy</code>方法把从指定位置开始的所有元素做一个整体的复制，向后移动一个位置；然后再将指定位置的元素设置为需要插入的元素的值。</p>
+<h3 id="插入元素"><a class="markdownIt-Anchor" href="#插入元素"></a> 插入元素</h3>
+<p>先检查是否需要扩容。使用<code>System.arraycopy</code>方法把从指定位置开始的所有元素做一个整体的复制，向后移动一个位置；然后再将指定位置的元素设置为需要插入的元素的值。</p>
 <center><img src="/2020/07/18/Java%E9%9B%86%E5%90%88-List/ArrayList-insert.png" class="" title="add(4, 10)"></center>
-
-<h2 id="2-LinkedList"><a href="#2-LinkedList" class="headerlink" title="2. LinkedList"></a>2. LinkedList</h2><p><code>LinkedList</code>特点：</p>
+<h2 id="2-linkedlist"><a class="markdownIt-Anchor" href="#2-linkedlist"></a> 2. LinkedList</h2>
+<p><code>LinkedList</code>特点：</p>
 <ul>
 <li>插入和删除快(慢在寻址，快在只要改变前后entry的引用地址)、新增和遍历慢，适用频繁插入删除元素的场景；</li>
 <li>允许添加null元素、允许添加重复元素、线程不安全；</li>
 <li>维护链表的first和last节点；</li>
 </ul>
-<h3 id="添加元素-1"><a href="#添加元素-1" class="headerlink" title="添加元素"></a>添加元素</h3><p><code>LinkedList</code>的节点维护三个变量：<code>prev</code>前节点、<code>item</code>节点值、<code>next</code>后节点；</p>
+<h3 id="添加元素-2"><a class="markdownIt-Anchor" href="#添加元素-2"></a> 添加元素</h3>
+<p><code>LinkedList</code>的节点维护三个变量：<code>prev</code>前节点、<code>item</code>节点值、<code>next</code>后节点；</p>
 <center><img src="/2020/07/18/Java%E9%9B%86%E5%90%88-List/LinkedList-add.png" class="" title="add"></center>
-
-<h3 id="删除元素-1"><a href="#删除元素-1" class="headerlink" title="删除元素"></a>删除元素</h3><p>删除元素后会将指定元素的<code>prev</code>、<code>next</code>和<code>item</code>置为null，为了让GC回收。源码：</p>
+<h3 id="删除元素-2"><a class="markdownIt-Anchor" href="#删除元素-2"></a> 删除元素</h3>
+<p>删除元素后会将指定元素的<code>prev</code>、<code>next</code>和<code>item</code>置为null，为了让GC回收。源码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (prev == <span class="keyword">null</span>) &#123;</span><br><span class="line">    first = next;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    prev.next = next;</span><br><span class="line">    x.prev = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (next == <span class="keyword">null</span>) &#123;</span><br><span class="line">    last = prev;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    next.prev = prev;</span><br><span class="line">    x.next = <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line">x.item = <span class="keyword">null</span>;</span><br></pre></td></tr></table></figure>
-
 <br/>
 <center><img src="/2020/07/18/Java%E9%9B%86%E5%90%88-List/LinkedList-remove.png" class="" title="remove enrey2"></center>
 
@@ -142,6 +145,6 @@
 <script>
 var sp = new Pager('data-pager-shell')
 
-</script>
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 </body>
 </html>
