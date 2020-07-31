@@ -649,7 +649,8 @@ figure > table > tbody > tr > td.code {
   margin-right: 10px;
 }
 .ContentView > section > table,
-.ListView > div > table {
+.ListView > div > table,
+li > table {
   line-height: line-height;
   margin: line-height 0;
   width: 100%;
@@ -657,21 +658,25 @@ figure > table > tbody > tr > td.code {
   border-spacing: 0;
 }
 .ContentView > section > table tr:nth-child(2n),
-.ListView > div > table tr:nth-child(2n) {
+.ListView > div > table tr:nth-child(2n),
+li > table tr:nth-child(2n) {
   background-color: #f8f8f8;
 }
 .ContentView > section > table tr,
-.ListView > div > table tr {
+.ListView > div > table tr,
+li > table tr {
   border-top: 1px solid #ccc;
   margin: 0;
   padding: 0;
 }
 .ContentView > section > table tr th:first-child,
-.ListView > div > table tr th:first-child {
+.ListView > div > table tr th:first-child,
+li > table tr th:first-child {
   margin-top: 0;
 }
 .ContentView > section > table tr th,
-.ListView > div > table tr th {
+.ListView > div > table tr th,
+li > table tr th {
   font-weight: bold;
   border: 1px solid #ccc;
   border-bottom: 0;
@@ -680,11 +685,13 @@ figure > table > tbody > tr > td.code {
   padding: 6px 13px;
 }
 .ContentView > section > table tr td:first-child,
-.ListView > div > table tr td:first-child {
+.ListView > div > table tr td:first-child,
+li > table tr td:first-child {
   margin-top: 0;
 }
 .ContentView > section > table tr td,
-.ListView > div > table tr td {
+.ListView > div > table tr td,
+li > table tr td {
   border: 1px solid #ccc;
   text-align: left;
   margin: 0;
