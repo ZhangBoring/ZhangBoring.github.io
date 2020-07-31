@@ -71,6 +71,7 @@
 <p>JVM支持多线程。每个线程有其自己的程序计数寄存器(program counter register)。在任何时间，JVM线程都在执行单一的方法。如果这个方法不是本地方法(native)，程序计数器会保存当前执行的JVM指令地址。如果执行的是本地方法(native)，JVM程序计数器的值是未定义。JVM的程序计数器足够大可以在特定平台上保存returnAddress或本地指针。</p>
 <!-- > The Java Virtual Machine can support many threads of execution at once. Each Java Virtual Machine thread has its own `pc` (program counter) register. At any point, each Java Virtual Machine thread is executing the code of a single method, namely the current method for that thread. If that method is not `native`, the pc register contains the address of the Java Virtual Machine instruction currently being executed. If the method currently being executed by the thread is `native`, the value of the Java Virtual Machine's pc register is undefined. The Java Virtual Machine's pc register is wide enough to hold a `returnAddress` or a native pointer on the specific platform. -->
 <h2 id="jvm栈java-virtual-machine-stacks"><a class="markdownIt-Anchor" href="#jvm栈java-virtual-machine-stacks"></a> JVM栈(Java Virtual Machine Stacks)</h2>
+<center><img src="/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/Stack-Frame.png" class="" title="栈帧"></center>
 <p>每个JVM线程都有一个私有的Java虚拟机栈，与线程同时创建。JVM虚拟机栈存储的栈帧结构为：</p>
 <ul>
 <li>局部变量表</li>
@@ -83,7 +84,7 @@
 </ul>
 </li>
 </ul>
-<p>JVM栈类似于常规语言(例如C)的堆栈：它保存局部变量和部分结果，并且在方法调用和返回中起作用。由于JVM栈除了push和pop栈帧外并不会直接操作栈帧，所以栈帧可能从堆上分配。JVM栈的内存不许要是连续的。</p>
+<p>JVM栈类似于常规语言(例如C)的堆栈：它保存局部变量和部分结果，并且在方法调用和返回中起作用。由于JVM栈除了push和pop栈帧外并不会直接操作栈帧，所以栈帧可能从堆上分配。JVM栈的内存不需要是连续的。</p>
 <p>Java虚拟机规范允许Java虚拟机栈具有固定的大小，或者根据要求动态扩展和收缩。如果Java虚拟机栈的大小是固定的，则每个线程创建时可以独立选择它们的大小。</p>
 <p>Java虚拟机的实现可以让程序员或用户控制Java虚拟机栈的初始大小，并且在动态扩展大小的Java虚拟机栈的情况下，可以控制最大和最小值。</p>
 <p>以下这些异常与Java虚拟机栈相关：</p>
