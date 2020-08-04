@@ -1,68 +1,304 @@
 <!DOCTYPE html>
-<html lang="zh-cmn-Hans">
+<html lang="en">
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>位运算 | Boring&#39;s Blog</title>
-  
-    <link rel="icon" href="/images/icon.png">
-  
-  
-  
-  <link href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" rel="stylesheet">
-  <!--link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css"-->
-  
-<link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.10.0/styles/github-gist.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Microsoft+YaHei:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}}};
+  </script>
+
+  <meta name="description" content="Java定义的位运算符操作数类型时可以自动拆箱为原始整数类型的数据，运算时先将操作数转换位二进制。这些类型包括：long、int、short、char和byte。  位逻辑运算符(&amp;,^,|,~)    运算符 含义 示例 结果     &amp; 操作数的按位与运算(AND) 0xff00 &amp; 0xf0f0 0xf000   ^ 操作数的按位异或(XOR) 0xff00 ^ 0x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="位运算">
+<meta property="og:url" content="http://yoursite.com/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/index.html">
+<meta property="og:site_name" content="Boring&#39;s Blog">
+<meta property="og:description" content="Java定义的位运算符操作数类型时可以自动拆箱为原始整数类型的数据，运算时先将操作数转换位二进制。这些类型包括：long、int、short、char和byte。  位逻辑运算符(&amp;,^,|,~)    运算符 含义 示例 结果     &amp; 操作数的按位与运算(AND) 0xff00 &amp; 0xf0f0 0xf000   ^ 操作数的按位异或(XOR) 0xff00 ^ 0x">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/&.png">
+<meta property="og:image" content="http://yoursite.com/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%7C.png">
+<meta property="og:image" content="http://yoursite.com/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%5E.png">
+<meta property="og:image" content="http://yoursite.com/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%3C%3C.png">
+<meta property="og:image" content="http://yoursite.com/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%3E%3E.png">
+<meta property="article:published_time" content="2020-07-18T15:31:41.000Z">
+<meta property="article:modified_time" content="2020-08-04T05:47:44.388Z">
+<meta property="article:author" content="张宝运">
+<meta property="article:tag" content="基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/&.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>位运算 | Boring's Blog</title>
   
-<link rel="stylesheet" href="/css/style.css">
 
-<meta name="generator" content="Hexo 4.2.1"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head>
 
-<body>
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="Shell">
-    <aside class='SideBar'>
-    <section class='avatar' style="background-image: url()">
-        <div class='av-pic' style="background-image: url(/images/icon.png)">
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <main class="main">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Boring's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#位逻辑运算符~"><span class="nav-number">1.</span> <span class="nav-text"> 位逻辑运算符(&amp;,^,|,~)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#位与运算"><span class="nav-number">1.1.</span> <span class="nav-text"> 位与运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#位或运算"><span class="nav-number">1.2.</span> <span class="nav-text"> 位或运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#位异或运算"><span class="nav-number">1.3.</span> <span class="nav-text"> 位异或运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#位取反运算"><span class="nav-number">1.4.</span> <span class="nav-text"> 位取反运算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#位移运算符"><span class="nav-number">2.</span> <span class="nav-text"> 位移运算符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#左移位运算"><span class="nav-number">2.1.</span> <span class="nav-text"> 左移位运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#右移位运算"><span class="nav-number">2.2.</span> <span class="nav-text"> 右移位运算</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="张宝运"
+      src="/images/icon.png">
+  <p class="site-author-name" itemprop="name">张宝运</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52
+          src="//music.163.com/outchain/player?type=2&id=28587913&auto=1&height=32">
+        </iframe>
+      </section>
+        <div class="back-to-top animated">
+          <i class="fa fa-arrow-up"></i>Top
+          <span>0%</span>
         </div>
-    </section>
-    <section class='menu'>
-        <div>Boring&#39;s Blog</div>
-        
-            <div>Life is boring, so go to study.</div>
-        
-        <ul>
-          
-            <a href="/" class="Btn">
-              <li>Home</li>
-            </a>  
-          
-            <a href="/tags/" class="Btn">
-              <li>Tags</li>
-            </a>  
-          
-            <a href="/archives/" class="Btn">
-              <li>Archive</li>
-            </a>  
-          
-        </ul>
-    </section>
-    <section class="media">
-        
-    </section>
-</aside>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
 
-    <div class="container">
-        <div data-pager-shell>
-            <div>
-  <article class='ContentView'>
-    <header class='PageTitle'>
-        <h1>位运算</h1>
-    </header>
 
-    <section>
-      <p>Java定义的位运算符操作数类型时可以自动拆箱为原始整数类型的数据，运算时先将操作数转换位二进制。这些类型包括：<code>long</code>、<code>int</code>、<code>short</code>、<code>char</code>和<code>byte</code>。</p>
+      </header>
+
+      
+
+<noscript>
+  <div id="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+      <div class="main-inner">
+        
+
+        <div class="content post posts-expand">
+          
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/icon.png">
+      <meta itemprop="name" content="张宝运">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Boring's Blog">
+    </span>
+
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          位运算
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-07-18 23:31:41" itemprop="dateCreated datePublished" datetime="2020-07-18T23:31:41+08:00">2020-07-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-08-04 13:47:44" itemprop="dateModified" datetime="2020-08-04T13:47:44+08:00">2020-08-04</time>
+              </span>
+            <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                    <i class="fa fa-tag"></i>
+                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/%E5%9F%BA%E7%A1%80/" rel="tag"> 基础</a>
+                </span>
+              </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>Java定义的位运算符操作数类型时可以自动拆箱为原始整数类型的数据，运算时先将操作数转换位二进制。这些类型包括：<code>long</code>、<code>int</code>、<code>short</code>、<code>char</code>和<code>byte</code>。</p>
 <h2 id="位逻辑运算符~"><a class="markdownIt-Anchor" href="#位逻辑运算符~"></a> 位逻辑运算符(&amp;,^,|,~)</h2>
 <table>
 <thead>
@@ -101,16 +337,16 @@
 </tbody>
 </table>
 <a id="more"></a>
-<h4 id="位与运算"><a class="markdownIt-Anchor" href="#位与运算"></a> 位与运算</h4>
+<h3 id="位与运算"><a class="markdownIt-Anchor" href="#位与运算"></a> 位与运算</h3>
 <p>对应的二进制位同时为1，计算结果才为1，否则为0。任何数与0按位与运算，结果为0。</p>
 <center><img src="/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/&.png" class="" title="23&amp;84&#x3D;20"></center>
-<p>####　位或运算</p>
+<h3 id="位或运算"><a class="markdownIt-Anchor" href="#位或运算"></a> 位或运算</h3>
 <p>对应的二进制位只要有一个为1，那么结果就为1；对应的二进制位都为0，结果才为0。</p>
 <center><img src="/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%7C.png" class="" title="23|84&#x3D;87"></center>
-<h4 id="位异或运算"><a class="markdownIt-Anchor" href="#位异或运算"></a> 位异或运算</h4>
+<h3 id="位异或运算"><a class="markdownIt-Anchor" href="#位异或运算"></a> 位异或运算</h3>
 <p>如果对应的二进制位相同（同时为0或同时为1）时，结果为0；如果对应的二进制位不相同，结果则为1。</p>
 <center><img src="/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%5E.png" class="" title="23^84&#x3D;67"></center>
-<h4 id="位取反运算"><a class="markdownIt-Anchor" href="#位取反运算"></a> 位取反运算</h4>
+<h3 id="位取反运算"><a class="markdownIt-Anchor" href="#位取反运算"></a> 位取反运算</h3>
 <p>只对一个操作数进行运算，将操作数二进制中的1改为0，0改为1。Java语言规范中原文：~x=(-x)-1，</p>
 <blockquote>
 <p>At run time, the value of the unary bitwise complement expression is the bitwise complement of the promoted value of the operand. In all cases, ~x equals (-x)-1.</p>
@@ -152,64 +388,133 @@
 </tr>
 </tbody>
 </table>
-<h4 id="左移位运算"><a class="markdownIt-Anchor" href="#左移位运算"></a> 左移位运算</h4>
+<h3 id="左移位运算"><a class="markdownIt-Anchor" href="#左移位运算"></a> 左移位运算</h3>
 <p><code>&lt;&lt;</code>:按二进制形式把所有的数字向左移动对应的位数，高位移出（舍弃），低位的空位补零。</p>
 <center><img src="/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%3C%3C.png" class="" title="9&lt;&lt;2"></center>
-<h4 id="右移位运算"><a class="markdownIt-Anchor" href="#右移位运算"></a> 右移位运算</h4>
+<h3 id="右移位运算"><a class="markdownIt-Anchor" href="#右移位运算"></a> 右移位运算</h3>
 <p><code>&gt;&gt;</code>:按二进制形式把所有的数字向右移动对应的位数，低位移出（舍弃），高位的空位补零。</p>
 <center><img src="/2020/07/18/%E4%BD%8D%E8%BF%90%E7%AE%97/%3E%3E.png" class="" title="8&gt;&gt;1"></center>
-
-      
-
-    </section>
-    
-      <section class='ArticleMeta'>
-          <div>
-            发布于&nbsp;
-            <time datetime="2020-07-18T15:31:41.000Z" itemprop="datePublished">
-              2020-07-18
-            </time>
-          </div>
-          
-            <div>
-              tags: 
-  <li class="meta-text">
-  { <a href="/tags/%E5%9F%BA%E7%A1%80/">基础</a> }
-  </li>
-
-
-            </div>
-          
-      </section>
-    
-    
-</article>
-
-  
-</div>
-
-            <footer>
-    <div>© 2020 - Zhang BaoYun </div>
-    <div>
-        <span>
-            Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a>
-        </span>
-        ,
-        <span>
-            Theme - <a href="https://github.com/nameoverflow/hexo-theme-icalm" target="_blank" rel="noopener">Icalm</a>
-        </span>
     </div>
-</footer>
+
+    
+    
+    
+
+      <footer class="post-footer">
+        
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/18/Java%E9%9B%86%E5%90%88-List/" rel="prev" title="Java集合-List">
+      <i class="fa fa-chevron-left"></i> Java集合-List
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/24/Java%E9%9B%86%E5%90%88-HashMap/" rel="next" title="Java集合-HashMap">
+      Java集合-HashMap <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
 
         </div>
-    </div>
-</div>
-
-<script src="/js/pager/dist/singlepager.js"></script>
+        
 
 <script>
-var sp = new Pager('data-pager-shell')
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
-</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张宝运</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/next-boot.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
 </body>
 </html>
