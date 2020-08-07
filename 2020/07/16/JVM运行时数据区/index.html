@@ -31,8 +31,9 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yoursite.com/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/JVM_Run-Time_Data_Areas.png">
 <meta property="og:image" content="http://yoursite.com/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/Stack-Frame.png">
+<meta property="og:image" content="http://yoursite.com/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/%E5%A0%86%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png">
 <meta property="article:published_time" content="2020-07-16T08:45:11.000Z">
-<meta property="article:modified_time" content="2020-07-20T06:01:57.207Z">
+<meta property="article:modified_time" content="2020-08-07T07:19:17.438Z">
 <meta property="article:author" content="张宝运">
 <meta property="article:tag" content="JVM">
 <meta property="article:tag" content="Java">
@@ -275,7 +276,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-20 14:01:57" itemprop="dateModified" datetime="2020-07-20T14:01:57+08:00">2020-07-20</time>
+                <time title="Modified: 2020-08-07 15:19:17" itemprop="dateModified" datetime="2020-08-07T15:19:17+08:00">2020-08-07</time>
               </span>
             <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -333,6 +334,7 @@
 <li>如果可以动态扩展Java虚拟机栈，并且尝试进行扩展，但是没有足够的内存满足；或者没有足够的内存为新线程创建Java虚拟机栈，则抛出<code>OutOfMemoryError</code>。</li>
 </ul>
 <h2 id="堆heap"><a class="markdownIt-Anchor" href="#堆heap"></a> 堆(Heap)</h2>
+<img src="/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/%E5%A0%86%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png" class="" title="堆内存模型">
 <p>Java虚拟机有一个所有线程共享的堆。堆是运行时数据区，从中分配所有类的实例和数组的内存。</p>
 <p>堆随着JVM的启动创建。堆存储的对象被垃圾回收器(GC)整理；对象永远不会被显示释放。Java虚拟机不知定特定的垃圾回收器，并且可以根据实现者的系统要求选择垃圾回收技术。堆的大小可以是固定的，也可以根据要求进行计算扩展和收缩。堆的内存不必是连续的。</p>
 <p>Java虚拟机的实现可以让程序员或用户控制堆的初始大小，并且堆内存如果可以动态地扩展或收缩，则可以控制堆内存的最大和最小值。</p>
