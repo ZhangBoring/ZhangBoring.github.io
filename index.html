@@ -246,7 +246,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/08/22/Java-%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="post-title-link" itemprop="url">Java-先城池</a>
+            <a href="/2020/08/22/Java-%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="post-title-link" itemprop="url">Java-线程池</a>
         </h2>
 
         <div class="post-meta">
@@ -322,160 +322,14 @@
 <li>scheduleWithFixedDelay：给定延迟后开始执行，每次任务执行完成后，经过执行周期时间，再执行下次任务。</li>
 </ul>
 </blockquote>
-<h1 id="代码"><a class="markdownIt-Anchor" href="#代码"></a> 代码</h1>
-<h2 id="公共测试代码"><a class="markdownIt-Anchor" href="#公共测试代码"></a> 公共测试代码</h2>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">commonTestCase</span><span class="params">(ThreadPoolExecutor threadPoolExecutor)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> n = i;</span><br><span class="line">        threadPoolExecutor.submit(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 模拟任务，时长2秒钟</span></span><br><span class="line">                Thread.sleep(<span class="number">2000L</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 在任务执行过程中，查看线程池状态</span></span><br><span class="line">    Thread.sleep(<span class="number">100L</span>);</span><br><span class="line">    System.out.println(<span class="string">"执行中线程池线程数量："</span> + threadPoolExecutor.getPoolSize());</span><br><span class="line">    System.out.println(<span class="string">"执行中等待队列任务数："</span> + threadPoolExecutor.getQueue().size());</span><br><span class="line">    <span class="comment">// 任务执行完之后，查看线程池状态</span></span><br><span class="line">    Thread.sleep(<span class="number">10000L</span>);</span><br><span class="line">    System.out.println(<span class="string">"执行完线程池线程数量："</span> + threadPoolExecutor.getPoolSize());</span><br><span class="line">    System.out.println(<span class="string">"执行完等待队列任务数："</span> + threadPoolExecutor.getQueue().size());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="一般场景"><a class="markdownIt-Anchor" href="#一般场景"></a> 一般场景</h2>
-<ul>
-<li>代码<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 线程池：</span></span><br><span class="line"><span class="comment"> *   核心线程数量为 3个，最多线程数量为 5个；</span></span><br><span class="line"><span class="comment"> *   超过核心数量的线程的存活时间为 5秒；</span></span><br><span class="line"><span class="comment"> *   线程等待队列为无界队列</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">normalThreadPool</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    ThreadPoolExecutor threadPoolExecutor = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">3</span>, <span class="number">5</span>,</span><br><span class="line">            <span class="number">5</span>, TimeUnit.SECONDS,</span><br><span class="line">            <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;());</span><br><span class="line">    commonTestCase(threadPoolExecutor);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li>执行结果
-<blockquote>
-<p>执行中线程池线程数量：3<br />
-执行中等待队列任务数：5<br />
-执行完线程池线程数量：3<br />
-执行完等待队列任务数：0</p>
-</blockquote>
-</li>
-<li>解释
-<ol>
-<li>为什么在执行过程中，线程数量没有增加到最大数量，而是选择将超出核心线程数的任务放到任务队列里？
-<blockquote>
-<p>线程池创建新线程的规则：</p>
-<ol>
-<li>如果正在运行的线程数小于<code>corePoolSize</code>时，即使其他工作线程处于空闲状态，也会创建一个新线程来处理请求；</li>
-<li>如果运行的线程数大于<code>corePoolSize</code>但小于<code>maximumPoolSize</code>时，则仅在队列已满时才创建新线程；</li>
-<li>答案：由于创建线程池时指定的线程池为无界队列，所以永远不会创建新线程，而是一直复用3个核心线程来处理任务。</li>
-</ol>
-</blockquote>
-</li>
-</ol>
-</li>
-</ul>
-<h2 id="一般场景拒绝策略"><a class="markdownIt-Anchor" href="#一般场景拒绝策略"></a> 一般场景+拒绝策略</h2>
-<ul>
-<li>代码<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 线程池：</span></span><br><span class="line"><span class="comment"> *   核心线程数量为 3个，最多线程数量为 5个；</span></span><br><span class="line"><span class="comment"> *   超过核心数量的线程的存活时间为 5秒；</span></span><br><span class="line"><span class="comment"> *   线程等待队列为容量大小为 3的队列</span></span><br><span class="line"><span class="comment"> *   指定拒绝策略</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">normalThreadPoolRejectHandler</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    ThreadPoolExecutor threadPoolExecutor = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">3</span>, <span class="number">5</span>, <span class="number">5</span>, TimeUnit.SECONDS, <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;(<span class="number">2</span>),</span><br><span class="line">            <span class="keyword">new</span> RejectedExecutionHandler() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor executor)</span> </span>&#123;</span><br><span class="line">                    System.out.println(<span class="string">"拒绝任务"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">    commonTestCase(threadPoolExecutor);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li>执行结果
-<blockquote>
-<p>拒绝任务<br />
-执行中线程池线程数量：5<br />
-执行中等待队列任务数：2<br />
-执行完线程池线程数量：3<br />
-执行完等待队列任务数：0</p>
-</blockquote>
-</li>
-<li>解释
-<ol>
-<li>前三个任务被核心线程执行时，4、5个任务被加到任务队列中，此时队列已满；后来的6、7个任务新建线程执行，此时线程池和队列都已经满了；第8个任务被拒绝添加，执行决绝策略。</li>
-<li>当8个任务已经处理完成，存货时间为5秒的2个非核心线程销毁，此时线程池线程数为3，队列任务数为0。</li>
-<li>执行任务流程(具体描述见<code>ThreadPoolExecutor#execute</code>注释)： <img src="/2020/08/22/Java-%E7%BA%BF%E7%A8%8B%E6%B1%A0/execute.png" class="" title="任务执行流程">
-</li>
-</ol>
-</li>
-</ul>
-<h3 id="通过executors创建固定大小线程池newfixedthreadpool"><a class="markdownIt-Anchor" href="#通过executors创建固定大小线程池newfixedthreadpool"></a> 通过Executors创建固定大小线程池:newFixedThreadPool</h3>
-<ul>
-<li>代码<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 等价与：</span></span><br><span class="line"><span class="comment"> *    new ThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue&lt;Runnable&gt;());</span></span><br><span class="line"><span class="comment"> * 无界队列，核心线程数和最大线程数相等(固定为5个)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">executorsNewFixed</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(<span class="number">5</span>);</span><br><span class="line">    commonTestCase(threadPoolExecutor);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li>执行结果
-<blockquote>
-<p>执行中线程池线程数量：5<br />
-执行中等待队列任务数：3<br />
-执行完线程池线程数量：5<br />
-执行完等待队列任务数：0</p>
-</blockquote>
-</li>
-<li>解释<br />
-等价于<a href="#%E4%B8%80%E8%88%AC%E5%9C%BA%E6%99%AF">第一种场景</a>，唯一的区别是：该实现核心线程数等于最大线程数，不会有临时线程创建所以存活时间参数就用不到了；<br />
-执行过程：前五个任务会直接用空闲线程执行，其他任务放到队列中等待其他任务执行完成。</li>
-</ul>
-<h3 id="通过executors创建缓存线程池newcachedthreadpool"><a class="markdownIt-Anchor" href="#通过executors创建缓存线程池newcachedthreadpool"></a> 通过Executors创建缓存线程池:newCachedThreadPool</h3>
-<ul>
-<li>代码<br />
-首先，在公共测试模块中临时添加段代码：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 等待缓存线程存活时间</span></span><br><span class="line">Thread.sleep(<span class="number">60000L</span>);</span><br><span class="line">System.out.println(<span class="string">"超过缓存时间线程池线程数量："</span> + threadPoolExecutor.getPoolSize());</span><br><span class="line">System.out.println(<span class="string">"超过缓存时间等待队列任务数："</span> + threadPoolExecutor.getQueue().size());</span><br></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 等价于:</span></span><br><span class="line"><span class="comment"> *     new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue&lt;Runnable&gt;());</span></span><br><span class="line"><span class="comment"> * 核心线程数为0,最大线程数为Integer最大值,线程存活时间为60秒</span></span><br><span class="line"><span class="comment"> * SynchronousQueue(同步队列)：在向线程池的任务队列中提交任务时，如果没有空闲线程，则添加失败，此时线程池新建线程，否则复用空闲线程。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">executorsNewCached</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;     </span><br><span class="line">    ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();</span><br><span class="line">    commonTestCase(threadPoolExecutor);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li>执行结果
-<blockquote>
-<p>执行中线程池线程数量：8<br />
-执行中等待队列任务数：0<br />
-执行完线程池线程数量：8<br />
-执行完等待队列任务数：0<br />
-超过缓存时间线程池线程数量：0<br />
-超过缓存时间等待队列任务数：0</p>
-</blockquote>
-</li>
-<li>解释：
-<ol>
-<li>在提交任务时，由于所有的任务都在执行中，对每一个新任务都新建线程；执行结束后，线程有60秒的存活时间，在这期间内没有新的任务提交，之后所有线程销毁。</li>
-</ol>
-</li>
-</ul>
-<h3 id="通过executors创建单线程线程池newsinglethreadexecutor"><a class="markdownIt-Anchor" href="#通过executors创建单线程线程池newsinglethreadexecutor"></a> 通过Executors创建单线程线程池:newSingleThreadExecutor</h3>
-<ul>
-<li>解释
-<ol>
-<li><code>Executors</code>内相关代码：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newSingleThreadExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> FinalizableDelegatedExecutorService</span><br><span class="line">        (<span class="keyword">new</span> ThreadPoolExecutor(<span class="number">1</span>, <span class="number">1</span>,</span><br><span class="line">                                <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                <span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li>创建一个线程池，该线程池在无界队列上使用单个线程执行任务，保证任务按顺序执行。</li>
-</ol>
-</li>
-</ul>
-<h3 id="通过executors创建定时任务线程池newscheduledthreadpool"><a class="markdownIt-Anchor" href="#通过executors创建定时任务线程池newscheduledthreadpool"></a> 通过Executors创建定时任务线程池:newScheduledThreadPool</h3>
-<p>定时任务线程池有两种用法，一种是单次执行，一种是周期执行，周期执行又有两种方式。</p>
-<h4 id="单次执行"><a class="markdownIt-Anchor" href="#单次执行"></a> 单次执行</h4>
-<ul>
-<li>代码<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 定义定时任务线程池，1秒后执行任务，进执行一次。DelayedWorkQueue实现。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scheduledThreadPoolOnce</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(<span class="number">1</span>);</span><br><span class="line">    scheduledThreadPoolExecutor.schedule(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">"执行定时任务："</span> + System.currentTimeMillis());</span><br><span class="line">    &#125;, <span class="number">1000L</span>, TimeUnit.MILLISECONDS);</span><br><span class="line">    System.out.println(<span class="string">"提交定时任务："</span> + System.currentTimeMillis());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li>执行结果
-<blockquote>
-<p>提交定时任务：1598088184064<br />
-执行定时任务：1598088185065</p>
-</blockquote>
-</li>
-</ul>
-<h4 id="周期执行atfixedrate"><a class="markdownIt-Anchor" href="#周期执行atfixedrate"></a> 周期执行–AtFixedRate</h4>
-<ul>
-<li>代码<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 定义定时任务线程池，1秒后执行任务,每隔三秒执行一次，任务执行时间为5秒。</span></span><br><span class="line"><span class="comment"> * 说明：任务执行时间大于循环周期，则该方式，在前次任务执行完成后立即执行。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scheduledThreadPoolAtFixedRate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(<span class="number">1</span>);</span><br><span class="line">    scheduledThreadPoolExecutor.scheduleAtFixedRate(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">"执行定时任务开始："</span> + System.currentTimeMillis());</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">5000L</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"执行定时任务结束："</span> + System.currentTimeMillis());</span><br><span class="line">        &#125;, <span class="number">1000L</span>, <span class="number">3000L</span>, TimeUnit.MILLISECONDS);</span><br><span class="line">    System.out.println(<span class="string">"完成提交定时任务："</span> + System.currentTimeMillis());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li>执行结果
-<blockquote>
-<p>完成提交定时任务：1598088589385<br />
-执行定时任务开始：1598088590385<br />
-执行定时任务结束：1598088595385<br />
-执行定时任务开始：1598088595385<br />
-执行定时任务结束：1598088600385<br />
-执行定时任务开始：1598088600386<br />
-…</p>
-</blockquote>
-</li>
-<li>解释
-<ol>
-<li>提交完成后1秒(<code>initialDelay</code>)，第一次任务开始执行，5秒后执行完成。第一次任务执行完成后，由于任务执行时间超过循环周期，所以第二次任务立刻执行。…</li>
-</ol>
-</li>
-</ul>
-<h4 id="周期执行withfixeddelay"><a class="markdownIt-Anchor" href="#周期执行withfixeddelay"></a> 周期执行–WithFixedDelay</h4>
-<ul>
-<li>代码<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 定义定时任务线程池，1秒后执行任务,每隔三秒执行一次，任务执行时间为5秒。</span></span><br><span class="line"><span class="comment"> * 说明：该方式是在前次任务执行结束后开始计算循环周期时间，即前次任务执行结束后，再经过3秒执行下次任务。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scheduledThreadPoolWithFixedDelay</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(<span class="number">1</span>);</span><br><span class="line">    scheduledThreadPoolExecutor.scheduleWithFixedDelay(() -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">"执行定时任务开始："</span> + System.currentTimeMillis());</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">5000L</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">"执行定时任务结束："</span> + System.currentTimeMillis());</span><br><span class="line">        &#125;, <span class="number">1000L</span>, <span class="number">3000L</span>, TimeUnit.MILLISECONDS);</span><br><span class="line">    System.out.println(<span class="string">"完成提交定时任务："</span> + System.currentTimeMillis());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li>执行结果
-<blockquote>
-<p>完成提交定时任务：1598088962132<br />
-执行定时任务开始：1598088963132<br />
-执行定时任务结束：1598088968132<br />
-执行定时任务开始：1598088971132<br />
-执行定时任务结束：1598088976133</p>
-</blockquote>
-</li>
-<li>解释
-<ol>
-<li>任务提交后1秒(<code>initialDelay</code>)，开始执行第一次任务，5秒后执行完成。然后又等了3秒，执行下次任务。…</li>
-</ol>
-</li>
-</ul>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/08/22/Java-%E7%BA%BF%E7%A8%8B%E6%B1%A0/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
