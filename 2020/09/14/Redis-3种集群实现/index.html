@@ -53,7 +53,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/09/14/Redis-3%E7%A7%8D%E9%9B%86%E7%BE%A4%E5%AE%9E%E7%8E%B0/Cluster-set%E6%B5%8B%E8%AF%95.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/14/Redis-3%E7%A7%8D%E9%9B%86%E7%BE%A4%E5%AE%9E%E7%8E%B0/Cluster-get%E6%B5%8B%E8%AF%95.png">
 <meta property="article:published_time" content="2020-09-14T02:29:26.000Z">
-<meta property="article:modified_time" content="2020-09-15T09:37:06.230Z">
+<meta property="article:modified_time" content="2020-09-16T07:54:04.611Z">
 <meta property="article:author" content="张宝运">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -290,7 +290,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-09-15 17:37:06" itemprop="dateModified" datetime="2020-09-15T17:37:06+08:00">2020-09-15</time>
+                <time title="Modified: 2020-09-16 15:54:04" itemprop="dateModified" datetime="2020-09-16T15:54:04+08:00">2020-09-16</time>
               </span>
             <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -497,7 +497,7 @@ Redis集群中有<code>16,384</code>(<code>2^14</code>)个哈希槽，每个key�
 <ul>
 <li>A节点负责0-5500号槽</li>
 <li>B节点负责5501-10000号槽</li>
-<li>C节点负责10001-16384号槽</li>
+<li>C节点负责10001-16383号槽</li>
 </ul>
 <p>这种结构很容易添加/删除节点，如果想添加D节点，则从A、B、C节点中分出部分槽到D上；想删除C节点，则将C节点上的槽分到A、B节点上，然后将没有数据的C节点移除即可。移动哈希槽的操作不会导致服务不可用。</p>
 <h2 id="搭建"><a class="markdownIt-Anchor" href="#搭建"></a> 搭建</h2>
@@ -515,7 +515,7 @@ Redis集群中有<code>16,384</code>(<code>2^14</code>)个哈希槽，每个key�
 </ol>
 <h3 id="搭建集群"><a class="markdownIt-Anchor" href="#搭建集群"></a> 搭建集群</h3>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli --cluster create --cluster-replicas 1 127.0.0.1:7000 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005</span><br></pre></td></tr></table></figure>
-<p>参数说明：<code>--cluster create</code>表示创建集群，<code>--replicas 1</code>表示为每个主节点创建1个从节点，后边的是实例的地址列表，回车之后，redis会自动划分主从配置，输入yes即开始创建。</p>
+<p>参数说明：<code>--cluster create</code>表示创建集群，<code>--replicas 1</code>表示为每个主节点创建1个从节点，后边的是实例的地址列表，回车之后，redis会打印推荐的主从配置，和哈希槽的划分；输入yes即开始创建。</p>
 <img src="/2020/09/14/Redis-3%E7%A7%8D%E9%9B%86%E7%BE%A4%E5%AE%9E%E7%8E%B0/Cluster-Redis%E6%8F%90%E4%BE%9B%E7%9A%84%E4%B8%BB%E4%BB%8E%E9%85%8D%E7%BD%AE.png" class="" title="Redis划分的主从配置">
 <p>日志输出<code>[OK] All 16384 slots covered.</code>说明所有哈希槽以分配完成，集群创建成功。</p>
 <h2 id="测试-3"><a class="markdownIt-Anchor" href="#测试-3"></a> 测试</h2>
