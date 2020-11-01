@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css">
+  <script src="/js/fancybox/jquery.fancybox.min.js"></script>
+  <script src="/js/wrap-image.js"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/icon.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Microsoft+YaHei:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false};
+  </script>
+
+  <meta name="description" content="JVM定义了在程序运行期间使用的各种运行时数据区。其中一些区域随JVM启动而创建，JVM退出而销毁。其他区域是每个线程私有的。随线程创建而创建，线程退出而销毁。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="运行时数据区(Run-Time Data Areas)">
+<meta property="og:url" content="http://yoursite.com/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/index.html">
+<meta property="og:site_name" content="Boring&#39;s Blog">
+<meta property="og:description" content="JVM定义了在程序运行期间使用的各种运行时数据区。其中一些区域随JVM启动而创建，JVM退出而销毁。其他区域是每个线程私有的。随线程创建而创建，线程退出而销毁。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/JVM_Run-Time_Data_Areas.png">
+<meta property="og:image" content="http://yoursite.com/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/Stack-Frame.png">
+<meta property="og:image" content="http://yoursite.com/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/%E5%A0%86%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png">
+<meta property="article:published_time" content="2020-07-16T08:45:11.000Z">
+<meta property="article:modified_time" content="2020-11-01T03:44:11.160Z">
+<meta property="article:author" content="张宝运">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/JVM_Run-Time_Data_Areas.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>运行时数据区(Run-Time Data Areas) | Boring's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <main class="main">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Boring's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8the-pc-register"><span class="nav-number">1.</span> <span class="nav-text"> 程序计数器(The pc Register)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jvm%E6%A0%88java-virtual-machine-stacks"><span class="nav-number">2.</span> <span class="nav-text"> JVM栈(Java Virtual Machine Stacks)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86heap"><span class="nav-number">3.</span> <span class="nav-text"> 堆(Heap)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BAmethod-area"><span class="nav-number">4.</span> <span class="nav-text"> 方法区(Method Area)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0run-time-constant-pool"><span class="nav-number">5.</span> <span class="nav-text"> 运行时常量池(Run-Time Constant Pool)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88native-method-stacks"><span class="nav-number">6.</span> <span class="nav-text"> 本地方法栈(Native Method Stacks)</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="张宝运"
+      src="/images/icon.png">
+  <p class="site-author-name" itemprop="name">张宝运</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=200 height=52
+          src="//music.163.com/outchain/player?type=2&id=28587913&auto=0&height=32">
+        </iframe>
+      </section>
+        <div class="back-to-top animated">
+          <i class="fa fa-arrow-up"></i>Top
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </header>
+
+      
+
+<noscript>
+  <div id="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+      <div class="main-inner">
+        
+
+        <div class="content post posts-expand">
+          
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/icon.png">
+      <meta itemprop="name" content="张宝运">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Boring's Blog">
+    </span>
+
+    
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          运行时数据区(Run-Time Data Areas)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-07-16 16:45:11" itemprop="dateCreated datePublished" datetime="2020-07-16T16:45:11+08:00">2020-07-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-11-01 11:44:11" itemprop="dateModified" datetime="2020-11-01T11:44:11+08:00">2020-11-01</time>
+              </span>
+            <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                    <i class="fa fa-tag"></i>
+                </span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/tags/JVM/" rel="tag"> JVM</a>
+                </span>
+              </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <center><img src="/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/JVM_Run-Time_Data_Areas.png" class="" title="JVM运行时数据区"></center>
+<!-- ![JVM运行时数据区](JVM_Run-Time_Data_Areas.png "JVM运行时数据区") -->
+<p>JVM定义了在程序运行期间使用的各种运行时数据区。其中一些区域随JVM启动而创建，JVM退出而销毁。其他区域是每个线程私有的。随线程创建而创建，线程退出而销毁。</p>
+<!-- > The Java Virtual Machine defines various run-time data areas that are used during execution of a program. Some of these data areas are created on Java Virtual Machine start-up and are destroyed only when the Java Virtual Machine exits. Other data areas are per thread. Per-thread data areas are created when a thread is created and destroyed when the thread exits. -->
+<a id="more"></a>
+<h2 id="程序计数器the-pc-register"><a class="markdownIt-Anchor" href="#程序计数器the-pc-register"></a> 程序计数器(The pc Register)</h2>
+<p>JVM支持多线程。每个线程有其自己的程序计数寄存器(program counter register)。在任何时间，JVM线程都在执行单一的方法。如果这个方法不是本地方法(native)，程序计数器会保存当前执行的JVM指令地址。如果执行的是本地方法(native)，JVM程序计数器的值是未定义。JVM的程序计数器足够大可以在特定平台上保存returnAddress或本地指针。</p>
+<!-- > The Java Virtual Machine can support many threads of execution at once. Each Java Virtual Machine thread has its own `pc` (program counter) register. At any point, each Java Virtual Machine thread is executing the code of a single method, namely the current method for that thread. If that method is not `native`, the pc register contains the address of the Java Virtual Machine instruction currently being executed. If the method currently being executed by the thread is `native`, the value of the Java Virtual Machine's pc register is undefined. The Java Virtual Machine's pc register is wide enough to hold a `returnAddress` or a native pointer on the specific platform. -->
+<h2 id="jvm栈java-virtual-machine-stacks"><a class="markdownIt-Anchor" href="#jvm栈java-virtual-machine-stacks"></a> JVM栈(Java Virtual Machine Stacks)</h2>
+<center><img src="/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/Stack-Frame.png" class="" title="栈帧"></center>
+<p>每个JVM线程都有一个私有的Java虚拟机栈，与线程同时创建。JVM虚拟机栈存储的栈帧结构为：</p>
+<ul>
+<li>局部变量表</li>
+<li>操作数栈</li>
+<li>动态连接</li>
+<li>方法返回地址
+<ul>
+<li>正常完成出口</li>
+<li>异常完成出口</li>
+</ul>
+</li>
+</ul>
+<p>JVM栈类似于常规语言(例如C)的堆栈：它保存局部变量和部分结果，并且在方法调用和返回中起作用。由于JVM栈除了push和pop栈帧外并不会直接操作栈帧，所以栈帧可能从堆上分配。JVM栈的内存不需要是连续的。</p>
+<p>Java虚拟机规范允许Java虚拟机栈具有固定的大小，或者根据要求动态扩展和收缩。如果Java虚拟机栈的大小是固定的，则每个线程创建时可以独立选择它们的大小。</p>
+<p>Java虚拟机的实现可以让程序员或用户控制Java虚拟机栈的初始大小，并且在动态扩展大小的Java虚拟机栈的情况下，可以控制最大和最小值。</p>
+<p>以下这些异常与Java虚拟机栈相关：</p>
+<ul>
+<li>如果线程需要的Java虚拟机栈大小比允许的更大，则抛出<code>StackOverflowError</code>。</li>
+<li>如果可以动态扩展Java虚拟机栈，并且尝试进行扩展，但是没有足够的内存满足；或者没有足够的内存为新线程创建Java虚拟机栈，则抛出<code>OutOfMemoryError</code>。</li>
+</ul>
+<h2 id="堆heap"><a class="markdownIt-Anchor" href="#堆heap"></a> 堆(Heap)</h2>
+<img src="/2020/07/16/JVM%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA/%E5%A0%86%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png" class="" title="堆内存模型">
+<p>Java虚拟机有一个所有线程共享的堆。堆是运行时数据区，从中分配所有类的实例和数组的内存。</p>
+<p>堆随着JVM的启动创建。堆存储的对象被垃圾回收器(GC)整理；对象永远不会被显示释放。Java虚拟机不知定特定的垃圾回收器，并且可以根据实现者的系统要求选择垃圾回收技术。堆的大小可以是固定的，也可以根据要求进行计算扩展和收缩。堆的内存不必是连续的。</p>
+<p>Java虚拟机的实现可以让程序员或用户控制堆的初始大小，并且堆内存如果可以动态地扩展或收缩，则可以控制堆内存的最大和最小值。</p>
+<p>以下这些异常与堆相关：</p>
+<ul>
+<li>如果计算需要的堆内存大于GC可以提供的，则抛出<code>OutOfMemoryError</code>。</li>
+</ul>
+<h2 id="方法区method-area"><a class="markdownIt-Anchor" href="#方法区method-area"></a> 方法区(Method Area)</h2>
+<p>JVM具有一个所有线程共享的方法区。方法区类似与常规语言的编译后代码的存储区域，或者类似与操作系统线程的“text”段(代码段)。它存储每个类的结构例如运行时常量池，字段和方法数据，以及方法和构造器的代码，包括用于类、实例、接口初始化的特殊方法(<code>&lt;init&gt;</code>)。</p>
+<p>方法区是在JVM启动时创建的。尽管方法区在逻辑上是堆的一部分，但是简单的实现可以选择不进行垃圾回收或对其压缩。Java虚拟机规范没有规定方法区的位置，或者管理已编译的代码的策略。</p>
+<p>方法区的大小可以是固定的，或者可以根据需要进行计算扩展和收缩。方法区的内存不必是连续的。</p>
+<p>Java虚拟机的实现可让程序员或用户控制方法区的初始大小，以及在方法区大小可变的情况下，可以控制最大和最小值。</p>
+<p>以下这些异常与方法区相关：</p>
+<p>如果方法区中的内存不满足分配请求，则抛出<code>OutOfMemoryError</code>。</p>
+<h2 id="运行时常量池run-time-constant-pool"><a class="markdownIt-Anchor" href="#运行时常量池run-time-constant-pool"></a> 运行时常量池(Run-Time Constant Pool)</h2>
+<p>运行时常量池是class文件中类或接口的<code>constant_pool</code>表的运行时表示。它包含几种常量，范围从编译时已知的数字到运行时解析的方法和字段引用。运行时常量池的功能类似与常规编程语言的符号表，尽管它包含的符号范围比典型的符号表还大。</p>
+<p>每个运行时常量池都是从方法区中分配的。当JVM创建类或接口时，为其分配运行时常量池。</p>
+<p>以下异常与类或接口的运行时常量池的构造有关：</p>
+<ul>
+<li>创建类或接口时，如果运行时常量池的构造需要的内存超过方法区中可用的内存，则抛出<code>OutOfMemoryError</code>。</li>
+</ul>
+<h2 id="本地方法栈native-method-stacks"><a class="markdownIt-Anchor" href="#本地方法栈native-method-stacks"></a> 本地方法栈(Native Method Stacks)</h2>
+<p>Java虚拟机的实现可以使用传统的堆栈（俗称“ C堆栈”）来支持本地方法（不是Java编写的方法）。本地方法也被用于使用诸如C之类的语言来解释Java虚拟机指令集的解释器实现。Java虚拟机的实现不能加载本地方法并，且自身不依赖于常规堆栈，因此无需提供本地方法栈。如果提供，通常在创建每个线程时为其分配本地方法栈。</p>
+<p>该规范允许本地方法栈具有固定大小，或者根据要求动态计算扩展和收缩。如果本地方法栈的大小固定，则在创建每个本地方法栈时可以独立选择其大小。</p>
+<p>Java虚拟机实现可以让程序员或用户控制提供的本地方法栈的初始大小，并且在本地方法栈大小可变化的情况下，可以控制最大和最小值。</p>
+<p>以下异常条件与本地方法栈相关：</p>
+<ul>
+<li>如果线程中的计算所需的本地方法栈超出允许的范围，则Java虚拟机将引发<code>StackOverflowError</code>。</li>
+<li>如果可以动态扩展本地方法栈并尝试进行本地方法栈的扩展，但是不能提供足够的内存；或者可以不能提供足够的内存来为新线程的创建初始本地方法栈，则Java虚拟机将引发<code>OutOfMemoryError</code>。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+        
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/14/Hello%20Hexo/" rel="prev" title="Hello Hexo!">
+      <i class="fa fa-chevron-left"></i> Hello Hexo!
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/18/Java%E9%9B%86%E5%90%88-List/" rel="next" title="Java集合-List">
+      Java集合-List <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+        </div>
+        
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张宝运</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/next-boot.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
